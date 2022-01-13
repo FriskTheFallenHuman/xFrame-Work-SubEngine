@@ -8,32 +8,10 @@
 
 ---
 
-:warning: This project is heavy WIP and is subject to changes!
+:warning: This project is getting a reboot currently and so there's no features currently
 
-## Features:
 
-- Scripting engine based on Lua.
-
-- Open source.
-
-- Basic player controller object.
-
-- and more!
-
-## Requeriments:
-
-- Unity 2020.3
-
-- Unity Cinemachine
-
-- Unity TMP
-
-- Unity ProBuilder
-
-- [xLua](https://github.com/Tencent/xLua/blob/master/README_EN.md)
 
 ## License:
 
 * For the general xFME license check LICENSE.md
-
-* For the xLua license please check LICENSE_XLUA.md
