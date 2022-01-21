@@ -42,8 +42,8 @@ public class PlayerController : MonoBehaviour
     [Header("Look Parameters")]
     [SerializeField, Range(1, 10)] private float lookSpeedX = 2.0f;
     [SerializeField, Range(1, 10)] private float lookSpeedY = 2.0f;
-    [SerializeField, Range(1, 180)] private float upperLookLimit = 80.0f;
-    [SerializeField, Range(1, 180)] private float lowerLookLimit = 80.0f;
+    [SerializeField, Range(1, 110)] private float upperLookLimit = 56.0f;
+    [SerializeField, Range(1, 110)] private float lowerLookLimit = 56.0f;
 
     [Header("Player Parameters")]
     [SerializeField] private float maxHealth = 100;
