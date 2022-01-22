@@ -136,6 +136,17 @@ public class PlayerController : MonoBehaviour
     /*Get the CharacterController */
     private CharacterController characterController;
 
+    /* Get our Animator from our player mesh */
+    private Animator playerAnim;
+
+    /* Animation hashes */
+    private float animationPlayTransition = 0.15f;
+    private int jumpAnimation;
+    private int crouchAnimation;
+    private int runningAnimation;
+    private int moveX;
+    private int moveZ;
+
     /* Our actual movement */
     private Vector3 moveDirection;
     private Vector2 currentInput;
@@ -166,6 +177,18 @@ public class PlayerController : MonoBehaviour
 
         /* Get our camera has children */
         playerCamera = GetComponentInChildren<Camera>();
+
+        /* Get our Animator from our Player Mesh*/
+        playerAnim = GetComponentInChildren<Animator>();
+
+        /* Caches our animation names */
+        moveX = Animator.StringToHash( "MoveX" );
+        moveZ = Animator.StringToHash( "MoveZ" );
+
+        /* Reference our animations */
+        jumpAnimation = Animator.StringToHash( "Jump" );
+        crouchAnimation = Animator.StringToHash( "Sneak Walk" );
+        runningAnimation = Animator.StringToHash( "isSprinting" );
 
         /* Set our default Y for viewbob */
         defaultYPos = playerCamera.transform.localPosition.y;
@@ -246,9 +269,37 @@ public class PlayerController : MonoBehaviour
         float moveDirectionY = moveDirection.y;
         moveDirection = ( transform.TransformDirection( Vector3.forward ) * currentInput.x ) + ( transform.TransformDirection( Vector3.right ) * currentInput.y );
         moveDirection.y = moveDirectionY;
+
+        /* Do our player animations */
+        DoPlayerAnimations();
     }
 
-   private void HandleFootsteps()
+    /* Executes our animation */
+    private void DoPlayerAnimations()
+    {
+        playerAnim.SetFloat( moveX, moveDirection.x );
+        playerAnim.SetFloat( moveZ, moveDirection.z );
+
+        /* Check if we are walking/running or not */
+        //bool isWalking = playerAnim.GetBool( isWalkingHash );
+        //bool isRunning = playerAnim.GetBool( isRunningHash );
+
+        /* If we are actually moving, set our animation to walking */
+        /*if ( !isWalking && currentInput != Vector2.zero )
+            playerAnim.SetBool( isWalkingHash, true );
+
+        if ( isWalking && currentInput == Vector2.zero )
+            playerAnim.SetBool( isWalkingHash, false );*/
+
+        /* If we are actually moving, and we are running set our animation to running */
+        /*if ( !isRunning && ( IsSprinting && currentInput != Vector2.zero ) )
+            playerAnim.SetBool( isRunningHash, true );
+
+        if ( isRunning && ( !IsSprinting && currentInput == Vector2.zero ) )
+            playerAnim.SetBool( isRunningHash, false );*/
+    }
+
+    private void HandleFootsteps()
     {
         /* Make sure if we are actually in the ground */
         if ( !characterController.isGrounded )
@@ -360,6 +411,8 @@ public class PlayerController : MonoBehaviour
     //TODO: Crippling statos == you can't run, limit our sprint based on our health
     private void HandleStamina()
     {
+        playerAnim.SetBool( runningAnimation, IsSprinting );
+
         /* Only drain our stamina if we are running and we aren't crouching */
         if ( IsSprinting && currentInput != Vector2.zero && !IsInternalCrouching )
         {
@@ -393,7 +446,10 @@ public class PlayerController : MonoBehaviour
     {
         /* Jump, no needs more explanation */
         if ( IsJumping )
+        {
             moveDirection.y = jumpForce;
+            playerAnim.CrossFade( jumpAnimation, animationPlayTransition );
+        }
     }
 
     private void HandleCrouching()
@@ -497,6 +553,8 @@ public class PlayerController : MonoBehaviour
         /* Sanity Check: Give us our exact crouch numbers */
         characterController.height = targetHeight;
         characterController.center = targetCenter;
+
+        playerAnim.CrossFade( crouchAnimation, animationPlayTransition );
 
         IsInternalCrouching = !IsInternalCrouching;
 
