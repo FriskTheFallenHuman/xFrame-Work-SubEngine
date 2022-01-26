@@ -141,9 +141,11 @@ public class PlayerController : MonoBehaviour
 
     /* Animation hashes */
     private float animationPlayTransition = 0.15f;
+    private int isSprintingHash;
+    private int isCrouchingHash;
+    private int isJumpingHash;
     private int jumpAnimation;
     private int crouchAnimation;
-    private int runningAnimation;
     private int moveX;
     private int moveZ;
 
@@ -178,6 +180,10 @@ public class PlayerController : MonoBehaviour
         /* Get our camera has children */
         playerCamera = GetComponentInChildren<Camera>();
 
+        /* Attach our camera o the player's mesh head bone */
+        var animator = GetComponentInChildren<Animator>();
+        playerCamera.transform.parent = animator.GetBoneTransform ( HumanBodyBones.Head );
+
         /* Get our Animator from our Player Mesh*/
         playerAnim = GetComponentInChildren<Animator>();
 
@@ -188,7 +194,9 @@ public class PlayerController : MonoBehaviour
         /* Reference our animations */
         jumpAnimation = Animator.StringToHash( "Jump" );
         crouchAnimation = Animator.StringToHash( "Sneak Walk" );
-        runningAnimation = Animator.StringToHash( "isSprinting" );
+        isSprintingHash = Animator.StringToHash( "isSprinting" );
+        isCrouchingHash = Animator.StringToHash( "isCrouching" );
+        isJumpingHash = Animator.StringToHash( "isJumping" );
 
         /* Set our default Y for viewbob */
         defaultYPos = playerCamera.transform.localPosition.y;
@@ -411,7 +419,7 @@ public class PlayerController : MonoBehaviour
     //TODO: Crippling statos == you can't run, limit our sprint based on our health
     private void HandleStamina()
     {
-        playerAnim.SetBool( runningAnimation, IsSprinting );
+        playerAnim.SetBool( isSprintingHash, IsSprinting );
 
         /* Only drain our stamina if we are running and we aren't crouching */
         if ( IsSprinting && currentInput != Vector2.zero && !IsInternalCrouching )
@@ -444,6 +452,8 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJumping()
     {
+        playerAnim.SetBool( isJumpingHash, IsJumping );
+
         /* Jump, no needs more explanation */
         if ( IsJumping )
         {
@@ -455,7 +465,10 @@ public class PlayerController : MonoBehaviour
     private void HandleCrouching()
     {
         if ( IsCrouching )
+        {
+            playerAnim.CrossFade( crouchAnimation, animationPlayTransition );
             StartCoroutine( nameof( CrouchStand ) );
+        }
     }
 
     private void HandleZoom()
@@ -554,9 +567,10 @@ public class PlayerController : MonoBehaviour
         characterController.height = targetHeight;
         characterController.center = targetCenter;
 
-        playerAnim.CrossFade( crouchAnimation, animationPlayTransition );
-
         IsInternalCrouching = !IsInternalCrouching;
+
+        playerAnim.SetBool( isCrouchingHash, IsInternalCrouching );
+        //playerAnim.CrossFade( crouchAnimation, animationPlayTransition );
 
         duringCrouchAnimation = false;
     }
