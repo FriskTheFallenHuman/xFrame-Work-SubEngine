@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - FootSteps/Gravel
+  - FootSteps/Metal
+  - FootSteps/Concrete
+  - FootSteps/Water
+  - FootSteps/Grass
+  - FootSteps/Tile
+  - FootSteps/Wood
+  - ObjectInteractable
   layers:
   - Default
   - TransparentFX

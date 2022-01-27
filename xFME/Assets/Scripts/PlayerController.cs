@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using VRM;
 
 using Vector3 = UnityEngine.Vector3;
 using Vector2 = UnityEngine.Vector2;
@@ -171,7 +172,7 @@ public class PlayerController : MonoBehaviour
         OnTakeDamage -= ApplyDamage;
     }
 
-   // Awake is called when the script instance is being loaded.
+    // Awake is called when the script instance is being loaded.
     void Awake()
     {
         /* We are the player so make our singleton at us */
@@ -506,7 +507,9 @@ public class PlayerController : MonoBehaviour
             {
                 hit.collider.TryGetComponent( out currentInteractable );
                 if ( currentInteractable )
+                {
                     currentInteractable.OnFocus();
+                }
             }
         }
         else if ( currentInteractable )
