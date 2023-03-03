@@ -1,0 +1,3 @@
+[submodule "xFME/Assets/Addons/RealtimeCSG"]
+	path = xFME/Assets/Addons/RealtimeCSG
+	url = git@github.com:FriskTheFallenHuman/RealtimeCSG.git
